@@ -1,0 +1,2 @@
+SHOPIE  APP
+Personal project
