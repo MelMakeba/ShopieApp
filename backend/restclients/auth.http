@@ -1,0 +1,49 @@
+@baseurl=http://localhost:3000
+@adminAuth = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lbGlzc2FtYWtlYmFAZ21haWwuY29tIiwic3ViIjoiY2E4N2Y4MTUtYWQyYy00OTc0LWE2YjUtYTdhNGUyMmE2OGVkIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUwMzQxMjE1LCJleHAiOjE3NTAzNDQ4MTV9.-7hyijnse-1v_l_q7BIgGanbfdYVLkSQ6fI3qy-wD4g
+### Register a new user
+POST {{baseurl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "mellisawanja254@gmail.com",
+  "password": "mellisa123",
+  "name": "Mellisa Waits"
+}
+
+### Login
+POST {{baseurl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "melissamakeba@gmail.com",
+  "password": "melAdmin321"
+  
+}
+
+### Request Password Reset
+POST {{baseurl}}/auth/password-reset/request
+Content-Type: application/json
+
+{
+  "email": "user@gmail.com"
+}
+
+### Reset Password
+POST {{baseurl}}/auth/password-reset/reset
+Content-Type: application/json
+
+{
+  "token": "5f9a8436171f802e8c50f7c50a2207510b59926c040df401e05b55c5d693784f",
+  "password": "newPassword123"
+}
+
+### Create Admin Account (for seeding)
+POST {{baseurl}}/auth/admin/create
+Content-Type: application/json
+
+{
+  "email": "melissamakeba@gmail.com",
+  "password": "melAdmin321",
+  "name": "Mel Admin"
+}
+

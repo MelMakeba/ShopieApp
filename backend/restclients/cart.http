@@ -1,0 +1,36 @@
+@baseurl=http://localhost:3000
+@userToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lbGxpc2F3YW5qYTI1NEBnbWFpbC5jb20iLCJzdWIiOiI4MGJjZjlhNS1lNjZkLTRhMzctODc0OC0xNDdjMDg4YTM3MTQiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1MDM0MTE0MywiZXhwIjoxNzUwMzQ0NzQzfQ.Udt9eBaurOkkZJuzKuVtU1Y7TiI3k4vVi-AVbVpspfs
+
+@productId= 4964a155-3bf8-4c3f-8d22-be4d96554b9e
+@cartItemId= 5ef2412c-9525-4c11-96b3-02f5a5c99e2b
+
+### Get user cart
+GET {{baseurl}}/cart
+Authorization: Bearer {{userToken}}
+
+### Add product to cart
+POST {{baseurl}}/cart/items
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}",
+  "quantity": 2
+}
+
+### Update cart item quantity
+PUT {{baseurl}}/cart/items/{{cartItemId}}
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### Remove item from cart
+DELETE {{baseurl}}/cart/items/{{cartItemId}}
+Authorization: Bearer {{userToken}}
+
+### Clear cart
+DELETE {{baseurl}}/cart
+Authorization: Bearer {{userToken}}

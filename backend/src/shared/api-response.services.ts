@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Injectable, HttpStatus } from '@nestjs/common';
+import { ApiResponse } from './interfaces/api-response.interfaces';
 
 interface PaginationMeta {
   page: number;
@@ -19,14 +21,14 @@ export class ApiResponseService {
   }
 
   error(
-    message = 'Error',
+    message: string,
     statusCode = HttpStatus.INTERNAL_SERVER_ERROR,
-    error?: unknown,
+    errorDetail?: string,
   ) {
     return {
       statusCode,
       message,
-      error: error || null,
+      error: errorDetail || message, // Ensure error is a string
       timestamp: new Date().toISOString(),
     };
   }
@@ -41,7 +43,16 @@ export class ApiResponseService {
     };
   }
 
-  ok<T>(data: T, message = 'Success') {
+  ok<T, R = any>(response: R, message: string, redirectUrl: string, data: T) {
+    return this.success(data, message, HttpStatus.OK);
+  }
+
+  okRequestReset<T, R = any>(
+    response: R,
+    message: string,
+    redirectUrl: string,
+    data: T,
+  ) {
     return this.success(data, message, HttpStatus.OK);
   }
 
@@ -53,8 +64,13 @@ export class ApiResponseService {
     return this.error(message, HttpStatus.BAD_REQUEST, error);
   }
 
-  notFound(message = 'Not found', error?: any) {
-    return this.error(message, HttpStatus.NOT_FOUND, error);
+  notFound(message: string): ApiResponse<null> {
+    return {
+      statusCode: HttpStatus.NOT_FOUND,
+      message,
+      error: message, // Ensure error is a string
+      timestamp: new Date().toISOString(),
+    };
   }
 
   forbidden(message = 'Forbidden', error?: any) {

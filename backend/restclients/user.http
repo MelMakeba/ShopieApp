@@ -1,0 +1,22 @@
+@baseurl= http://localhost:3000
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwic3ViIjoiMTFiMWZmN2YtMGVjMS00ZGFjLTlhOWMtYjJmZDA2OWRlMzdhIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTAzMjUyOTIsImV4cCI6MTc1MDMyODg5Mn0.-ukeqJX3-NGXmVPqXie-k6rwUDtRdzpZSr4PtIeVJC0
+
+
+###Get user profile
+GET {{baseurl}}/users/get-profile
+Authorization: Bearer {{authToken}}
+
+### Update user profile
+PUT {{baseurl}}/users/update-profile
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Mel Name",
+  "email": "mel@example.com"
+}
+
+
+### Delete user account
+DELETE {{baseurl}}/users/delete
+Authorization: Bearer {{authToken}}

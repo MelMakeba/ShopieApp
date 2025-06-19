@@ -1,0 +1,59 @@
+@baseurl=http://localhost:3000
+@adminToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lbGlzc2FtYWtlYmFAZ21haWwuY29tIiwic3ViIjoiY2E4N2Y4MTUtYWQyYy00OTc0LWE2YjUtYTdhNGUyMmE2OGVkIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUwMzUyODE5LCJleHAiOjE3NTAzNTY0MTl9.9CfRj5x0rstawu9nr01IyBybUgCTuxE-Irg1mLVeFnE
+@userToken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lbGxpc2F3YW5qYTI1NEBnbWFpbC5jb20iLCJzdWIiOiI4MGJjZjlhNS1lNjZkLTRhMzctODc0OC0xNDdjMDg4YTM3MTQiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1MDM0MTE0MywiZXhwIjoxNzUwMzQ0NzQzfQ.Udt9eBaurOkkZJuzKuVtU1Y7TiI3k4vVi-AVbVpspfs
+
+@productId= 4964a155-3bf8-4c3f-8d22-be4d96554b9e
+
+#### Create product with file upload (admin only)
+POST {{baseurl}}/products
+Authorization: Bearer {{adminToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Smartphone XYZ
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+A high-performance smartphone with excellent camera quality
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="price"
+
+799.99
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="stock"
+
+50
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="smartphone.jpg"
+Content-Type: image/jpeg
+
+< /home/mel/Documents/images.jpeg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Get all products (public)
+GET {{baseurl}}/products
+
+### Get all products with pagination (public)
+GET {{baseurl}}/products?page=1&limit=10
+
+### Search products (public)
+GET {{baseurl}}/products/search?query=smartphone&page=1&limit=10
+
+### Get single product (public)
+GET {{baseurl}}/products/{{productId}}
+
+### Update product (admin only)
+PUT {{baseurl}}/products/{{productId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "price": 749.99,
+  "stock": 45
+}
+
+### Delete product (admin only)
+DELETE {{baseurl}}/products/{{productId}}
+Authorization: Bearer {{adminToken}}
