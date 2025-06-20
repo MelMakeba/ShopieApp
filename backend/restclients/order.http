@@ -1,0 +1,45 @@
+@baseurl = http://localhost:3000
+@userToken =
+@adminToken =
+@userId =
+@orderId =
+
+
+POST {{baseurl}}/orders/create
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "shippingAddress": "123 Test St, Test City, TC 12345",
+  "paymentMethod": "CREDIT_CARD"
+}
+
+# Admin confirms order
+PATCH {{baseurl}}/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "CONFIRMED"
+}
+
+#  Admin ships order
+PATCH {{baseurl}}/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "SHIPPED"
+}
+
+
+# Admin marks as delivered
+PATCH {{baseurl}}/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "DELIVERED"
+}
+
+

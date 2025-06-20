@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order Confirmation - ShopieApp</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .header { text-align: center; padding: 20px 0; border-bottom: 2px solid #28a745; }
+        .content { padding: 20px 0; }
+        .order-item { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; }
+        .total { font-weight: bold; font-size: 18px; padding: 10px 0; border-top: 2px solid #28a745; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #28a745; color: white; text-decoration: none; border-radius: 4px; margin: 20px 0; }
+        .footer { text-align: center; padding: 20px 0; border-top: 1px solid #eee; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ShopieApp</h1>
+            <h2>Order Confirmation</h2>
+        </div>
+        <div class="content">
+            <p>Hello <%= name %>,</p>
+            <p>Thank you for your order! Here are the details:</p>
+            
+            <h3>Order #<%= orderNumber %></h3>
+            <p>Order Date: <%= orderDate %></p>
+            
+            <h4>Items Ordered:</h4>
+            <% items.forEach(item => { %>
+                <div class="order-item">
+                    <div>
+                        <strong><%= item.name %></strong><br>
+                        Quantity: <%= item.quantity %>
+                    </div>
+                    <div>$<%= (item.price * item.quantity).toFixed(2) %></div>
+                </div>
+            <% }) %>
+            
+            <div class="total">
+                Total: $<%= totalAmount.toFixed(2) %>
+            </div>
+            
+            <% if (shippingAddress) { %>
+                <h4>Shipping Address:</h4>
+                <p><%= shippingAddress %></p>
+            <% } %>
+            
+            <a href="<%= trackingUrl %>" class="button">Track Your Order</a>
+            
+            <p>We'll send you another email when your order ships!</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2025 ShopieApp. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

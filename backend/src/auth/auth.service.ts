@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from 'generated/prisma';
+import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 import { ApiResponseService } from '../shared/api-response.services';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -14,15 +16,16 @@ import {
   RequestResetResponse,
   ResetPasswordResponse,
 } from './interfaces/reset-password.interfaces';
-import * as bcrypt from 'bcrypt';
-import { randomBytes } from 'crypto';
-
+import { MailerService } from '../shared/mailer/mailer.service';
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private prisma: PrismaClient,
     private jwtService: JwtService,
     private apiResponse: ApiResponseService,
+    private mailerService: MailerService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -160,6 +163,23 @@ export class AuthService {
         },
       });
 
+      // Send password reset email
+      const emailResult = await this.mailerService.sendPasswordResetEmail(
+        user.email,
+        {
+          name: user.name || 'User',
+          resetToken,
+          resetUrl: `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`,
+          expiresIn: '1 hour',
+        },
+      );
+
+      if (!emailResult.success) {
+        this.logger.warn(
+          `Failed to send password reset email: ${emailResult.error}`,
+        );
+      }
+
       const response: RequestResetResponse = {
         message: 'Password reset instructions sent to your email',
         // Only include token in development environments
@@ -168,7 +188,7 @@ export class AuthService {
 
       return this.apiResponse.okRequestReset(
         response,
-        'Password reset token generated',
+        'Password reset token generated and email sent',
         '/login',
         response,
       );
