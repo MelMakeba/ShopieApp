@@ -1,18 +1,22 @@
 @baseurl = http://localhost:3000
-@userToken =
-@adminToken =
-@userId =
-@orderId =
+@userToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lbGxpc2F3YW5qYTI1NEBnbWFpbC5jb20iLCJzdWIiOiI4MGJjZjlhNS1lNjZkLTRhMzctODc0OC0xNDdjMDg4YTM3MTQiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1MDYzNTU4MCwiZXhwIjoxNzUwNjM5MTgwfQ.CWhsJth9wun9pITXdd5xVynDsEenFE5avJ1bSvDy1ZU
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lbGlzc2FtYWtlYmFAZ21haWwuY29tIiwic3ViIjoiY2E4N2Y4MTUtYWQyYy00OTc0LWE2YjUtYTdhNGUyMmE2OGVkIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUwNjM1NTA2LCJleHAiOjE3NTA2MzkxMDZ9.Uzot4FCd5osxqhyS13FUhSIn5FQozBuKf1eyxN1xjHQ
+@userId = 80bcf9a5-e66d-4a37-8748-147c088a3714
 
-
+# Create new order
 POST {{baseurl}}/orders/create
 Authorization: Bearer {{userToken}}
 Content-Type: application/json
 
 {
+  "userId": "{{userId}}",
   "shippingAddress": "123 Test St, Test City, TC 12345",
   "paymentMethod": "CREDIT_CARD"
 }
+
+### 
+# Get the orderId from the response of the above request and set it here
+@orderId = your-order-id-here
 
 # Admin confirms order
 PATCH {{baseurl}}/orders/{{orderId}}/status
@@ -23,7 +27,8 @@ Content-Type: application/json
   "status": "CONFIRMED"
 }
 
-#  Admin ships order
+###
+# Admin ships order
 PATCH {{baseurl}}/orders/{{orderId}}/status
 Authorization: Bearer {{adminToken}}
 Content-Type: application/json
@@ -32,7 +37,7 @@ Content-Type: application/json
   "status": "SHIPPED"
 }
 
-
+###
 # Admin marks as delivered
 PATCH {{baseurl}}/orders/{{orderId}}/status
 Authorization: Bearer {{adminToken}}

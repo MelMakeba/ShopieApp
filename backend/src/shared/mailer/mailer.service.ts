@@ -153,8 +153,8 @@ export class MailerService {
   ): Promise<string> {
     try {
       const templateMap = {
-        'password-reset': 'password_reset.ejs',
-        'order-confirmation': 'order_confirmation.ejs',
+        password_reset: 'password-reset.ejs',
+        order_confirmation: 'order-confirmation.ejs',
       };
 
       const filename = templateMap[templateName] || `${templateName}.ejs`;

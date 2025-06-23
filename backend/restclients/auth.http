@@ -1,5 +1,5 @@
 @baseurl=http://localhost:3000
-@adminAuth = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lbGlzc2FtYWtlYmFAZ21haWwuY29tIiwic3ViIjoiY2E4N2Y4MTUtYWQyYy00OTc0LWE2YjUtYTdhNGUyMmE2OGVkIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUwMzQxMjE1LCJleHAiOjE3NTAzNDQ4MTV9.-7hyijnse-1v_l_q7BIgGanbfdYVLkSQ6fI3qy-wD4g
+@adminAuth = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lbGlzc2FtYWtlYmFAZ21haWwuY29tIiwic3ViIjoiY2E4N2Y4MTUtYWQyYy00OTc0LWE2YjUtYTdhNGUyMmE2OGVkIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUwNjM1NTA2LCJleHAiOjE3NTA2MzkxMDZ9.Uzot4FCd5osxqhyS13FUhSIn5FQozBuKf1eyxN1xjHQ
 ### Register a new user
 POST {{baseurl}}/auth/register
 Content-Type: application/json
@@ -15,8 +15,8 @@ POST {{baseurl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "melissamakeba@gmail.com",
-  "password": "melAdmin321"
+  "email": "mellisawanja254@gmail.com",
+  "password": "mellisa123"
   
 }
 
@@ -25,7 +25,7 @@ POST {{baseurl}}/auth/password-reset/request
 Content-Type: application/json
 
 {
-  "email": "user@gmail.com"
+  "email": "mellisawanja254@gmail.com"
 }
 
 ### Reset Password
@@ -42,8 +42,8 @@ POST {{baseurl}}/auth/admin/create
 Content-Type: application/json
 
 {
-  "email": "melissamakeba@gmail.com",
-  "password": "melAdmin321",
+  "email": "melicity4@gmail.com",
+  "password": "melAdmin123",
   "name": "Mel Admin"
 }
 

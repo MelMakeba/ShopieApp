@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable no-useless-escape */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
@@ -60,9 +59,9 @@ export class CloudinaryService {
   constructor(private configService: ConfigService) {
     // Initialize Cloudinary with environment variables
     cloudinary.config({
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      cloud_name: process.env.CLOUDINARY_NAME,
       api_key: process.env.CLOUDINARY_API_KEY,
-      api_secret: process.env.CLOUDINARY_API_SECRET,
+      api_secret: process.env.CLOUDINARY_SECRET_KEY,
     });
 
     this.logger.log('Cloudinary service initialized successfully');
