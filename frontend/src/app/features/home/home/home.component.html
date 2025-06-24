@@ -1,0 +1,91 @@
+<div>
+    <section class="bg-primary text-white rounded-lg p-8 mb-12">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to ShopieApp</h1>
+        <p class="text-xl mb-8">Your one-stop destination for all your shopping needs!</p>
+        <a routerLink="/products" class="bg-white text-primary px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition">Shop Now</a>
+      </div>
+    </section>
+  
+    <!-- Featured Products Section -->
+    <section class="mb-12">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold">Featured Products</h2>
+        <a routerLink="/products" class="text-primary hover:underline flex items-center">
+          View All
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
+  
+      @if (loading) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (i of [1, 2, 3, 4]; track i) {
+        <div class="bg-white rounded-lg shadow-md p-4 animate-pulse">
+          <div class="h-48 bg-gray-300 rounded mb-4"></div>
+          <div class="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
+          <div class="h-4 bg-gray-300 rounded w-1/2 mb-4"></div>
+          <div class="h-6 bg-gray-300 rounded w-1/4"></div>
+        </div>
+        }
+      </div>
+      } @else if (featuredProducts.length === 0) {
+      <div class="text-center py-10">
+        <p class="text-gray-500">No products found</p>
+      </div>
+      } @else {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (product of featuredProducts; track product.id) {
+        <app-product-card [product]="product" (addToCart)="addToCart(product)"></app-product-card>
+        }
+      </div>
+      }
+    </section>
+  
+    <!-- Categories Section -->
+    <section class="mb-12">
+      <h2 class="text-3xl font-bold mb-6">Shop by Category</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-info bg-opacity-10 p-6 rounded-lg text-center hover:bg-opacity-20 transition cursor-pointer">
+          <div class="bg-info bg-opacity-20 h-16 w-16 mx-auto rounded-full flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a4 4 0 118 0v7m-8 0H4" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Electronics</h3>
+          <p class="text-gray-600">Find the latest gadgets and electronics</p>
+        </div>
+  
+        <div class="bg-warning bg-opacity-10 p-6 rounded-lg text-center hover:bg-opacity-20 transition cursor-pointer">
+          <div class="bg-warning bg-opacity-20 h-16 w-16 mx-auto rounded-full flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Fashion</h3>
+          <p class="text-gray-600">Discover the latest fashion trends</p>
+        </div>
+  
+        <div class="bg-success bg-opacity-10 p-6 rounded-lg text-center hover:bg-opacity-20 transition cursor-pointer">
+          <div class="bg-success bg-opacity-20 h-16 w-16 mx-auto rounded-full flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Home & Living</h3>
+          <p class="text-gray-600">Elevate your living space</p>
+        </div>
+      </div>
+    </section>
+  
+    <!-- Call to Action -->
+    <section class="bg-secondary text-white rounded-lg p-8 text-center">
+      <h2 class="text-3xl font-bold mb-4">Join Our Community</h2>
+      <p class="text-xl mb-6">Subscribe to receive updates on new products and special offers</p>
+      <div class="max-w-md mx-auto flex">
+        <input type="email" placeholder="Your email address" class="flex-1 py-3 px-4 rounded-l-lg focus:outline-none">
+        <button class="bg-primary hover:bg-primary/80 px-6 py-3 rounded-r-lg font-semibold">Subscribe</button>
+      </div>
+    </section>
+  </div>

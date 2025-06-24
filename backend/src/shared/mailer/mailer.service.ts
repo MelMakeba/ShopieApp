@@ -22,8 +22,7 @@ export interface EmailOptions {
 
 export interface PasswordResetContext {
   name: string;
-  resetUrl: string;
-  resetToken: string;
+  token: string;
   expiresIn: string;
 }
 
@@ -119,9 +118,7 @@ export class MailerService {
       template: 'password-reset',
       context: {
         ...context,
-        resetUrl:
-          context.resetUrl ||
-          `${this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000')}/reset-password?token=${context.resetToken}`,
+        resetUrl: `${this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000')}/reset-password?token=${context.token}`,
         expiresIn: context.expiresIn || '1 hour',
       },
     };

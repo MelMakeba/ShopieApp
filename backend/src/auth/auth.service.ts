@@ -168,8 +168,7 @@ export class AuthService {
         user.email,
         {
           name: user.name || 'User',
-          resetToken,
-          resetUrl: `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`,
+          token: resetToken,
           expiresIn: '1 hour',
         },
       );
