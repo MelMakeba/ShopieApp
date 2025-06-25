@@ -1,34 +1,35 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormGroup, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { NotificationService } from '../../../core/services/notifications/notifications.service';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.css'
+  styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent {
-  forgotPasswordForm! : FormGroup;
+  forgotPasswordForm: FormGroup;
   loading = false;
   submitted = false;
   errorMessage = '';
   successMessage = '';
 
   constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService
-  )
-  {
-    this.forgotPasswordForm = this.formBuilder.group({
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private notificationService: NotificationService
+  ) {
+    this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
-
     });
   }
 
+  // Convenience getter for easy access to form fields
   get f() { return this.forgotPasswordForm.controls; }
 
   onSubmit(): void {
@@ -36,23 +37,26 @@ export class ForgotPasswordComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (this.forgotPasswordForm.invalid){
+    if (this.forgotPasswordForm.invalid) {
       return;
     }
 
     this.loading = true;
-    this.authService.requestPasswordReset(this.f['email'].value).subscribe({
+    const email = this.forgotPasswordForm.controls['email'].value;
+
+    this.authService.requestPasswordReset(email).subscribe({
       next: () => {
         this.loading = false;
         this.successMessage = 'Password reset instructions have been sent to your email.';
+        this.notificationService.success(this.successMessage);
         this.forgotPasswordForm.reset();
         this.submitted = false;
       },
-      error: error => {
+      error: (err) => {
         this.loading = false;
-        this.errorMessage = error?.error?.message || 'Failed to process your request. Please try again.'
+        this.errorMessage = err?.error?.message || 'Failed to send reset email. Please try again.';
+        this.notificationService.error(this.errorMessage);
       }
     });
   }
-
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from 'generated/prisma';
 import { ApiResponseService } from '../shared/api-response.services';
@@ -377,10 +378,10 @@ export class CartService {
       });
 
       return this.apiResponse.ok(
-        null,
+        {},
         'Product removed from cart successfully',
         '', // redirectUrl
-        null, // data
+        {}, // data
       );
     } catch (error) {
       return this.apiResponse.error(
@@ -408,10 +409,10 @@ export class CartService {
 
       if (!cart || cart.CartItem.length === 0) {
         return this.apiResponse.ok(
-          null,
+          {},
           'Cart is already empty',
           '', // redirectUrl
-          null, // data
+          {}, // data
         );
       }
 
@@ -441,10 +442,10 @@ export class CartService {
       });
 
       return this.apiResponse.ok(
-        null,
+        {},
         'Cart cleared successfully',
         '', // redirectUrl
-        null, // data
+        {}, // data
       );
     } catch (error) {
       return this.apiResponse.error(

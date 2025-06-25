@@ -1,23 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 export interface CartItem {
   id: string;
   productId: string;
-  productName: string;
-  price: number;
   quantity: number;
-  image?: string;
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    stock: number;
+    imageUrl?: string;
+  };
 }
 
 export interface Cart {
   id: string;
   userId: string;
   items: CartItem[];
-  totalItems: number;
-  totalPrice: number;
+  totalItems?: number; 
 }
 
 @Injectable({
@@ -27,6 +30,7 @@ export class CartService {
   private apiUrl = `http://localhost:3000/cart`;
   private cartSubject = new BehaviorSubject<Cart | null>(null);
   cart$ = this.cartSubject.asObservable();
+  cartItems$: any;
 
   constructor(private http: HttpClient) {
     this.loadCart();
@@ -39,7 +43,22 @@ export class CartService {
   }
 
   getCart(): Observable<Cart> {
-    return this.http.get<Cart>(this.apiUrl).pipe(
+    return this.http.get<{ data: any }>(`${this.apiUrl}`).pipe(
+      map(response => {
+        const cartData = response.data;
+        return {
+          id: cartData.id,
+          userId: cartData.userId,
+          items: cartData.CartItem.map((item: any) => ({
+            id: item.id,
+            productId: item.productId,
+            quantity: item.quantity,
+            product: item.product,
+            imageUrl: item.product.image // Map 'product.image' directly to 'imageUrl'
+          })),
+          totalItems: cartData.CartItem.reduce((total: number, item: any) => total + item.quantity, 0)
+        } as Cart;
+      }),
       tap(cart => {
         this.cartSubject.next(cart);
       })

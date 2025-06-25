@@ -117,10 +117,10 @@ export class UsersService {
       });
 
       return this.apiResponse.ok(
-        null,
+        {},
         'Account deactivated successfully',
         '', // redirectUrl
-        null, // data
+        {}, // data
       );
     } catch (error) {
       return this.apiResponse.error(

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { NotificationService } from '../../../core/services/notifications/notifications.service';
 
 @Component({
   selector: 'app-register',
@@ -18,65 +19,59 @@ export class RegisterComponent implements OnInit {
   errorMessage = '';
 
   constructor(
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
+    private authService: AuthService,
     private router: Router,
-    private authService: AuthService
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
-    this.registerForm = this.formBuilder.group({
-      name: ['', [Validators.required]],
+    this.registerForm = this.fb.group({
+      name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required]
     }, {
-      validator: this.passwordMatchValidator
+      validators: this.passwordMatchValidator
     });
-    
-    // Redirect if already logged in
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/']);
-    }
   }
 
-  // Custom validator to check if password and confirm password match
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-
-    if (password !== confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
-    } else {
-      form.get('confirmPassword')?.setErrors(null);
-    }
-  }
-
-  // Easy access to form controls
+  // Convenience getter for easy access to form fields
   get f() { return this.registerForm.controls; }
+
+  // Custom validator for password match
+  passwordMatchValidator(group: FormGroup) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    
+    if (password !== confirmPassword) {
+      group.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+    }
+    
+    return null;
+  }
 
   onSubmit(): void {
     this.submitted = true;
     this.errorMessage = '';
 
-    // Stop if form is invalid
     if (this.registerForm.invalid) {
       return;
     }
 
     this.loading = true;
-    this.authService.register(
-      this.f['name'].value,
-      this.f['email'].value,
-      this.f['password'].value
-    ).subscribe({
+    
+    const { name, email, password } = this.registerForm.value;
+    
+    this.authService.register(name, email, password).subscribe({
       next: () => {
-        this.router.navigate(['/login'], { 
-          queryParams: { registered: true }
-        });
+        this.notificationService.success('Registration successful! Welcome to ShopieApp.');
+        this.router.navigate(['/']);
       },
-      error: error => {
-        this.errorMessage = error?.error?.message || 'Registration failed. Please try again.';
+      error: (err) => {
         this.loading = false;
+        this.errorMessage = err?.error?.message || 'Registration failed. Please try again.';
+        this.notificationService.error(this.errorMessage);
       }
     });
   }

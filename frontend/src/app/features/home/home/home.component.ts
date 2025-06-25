@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   loadFeaturedProducts(): void {
     this.productService.getProducts(1, 8).subscribe({
       next: (response) => {
-        this.featuredProducts = response.data;
+        this.featuredProducts = response;
         this.loading = false;
       },
       error: (err) => {

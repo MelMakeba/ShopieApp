@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { NotificationService } from '../../../core/services/notifications/notifications.service';
 
 @Component({
   selector: 'app-login',
@@ -19,25 +20,24 @@ export class LoginComponent implements OnInit {
   returnUrl = '/';
 
   constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private authService: AuthService,
     private router: Router,
-    private authService: AuthService
+    private route: ActivatedRoute,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
-
+    // Get return URL from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate([this.returnUrl]);
-    }
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
   }
 
+  // Convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
 
   onSubmit(): void {
@@ -49,16 +49,28 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.authService.login(
-      this.f['email'].value,
-      this.f['password'].value
-    ).subscribe({
-      next: () => {
-        this.router.navigate([this.returnUrl]);
+    
+    const { email, password } = this.loginForm.value;
+    
+    this.authService.login({email, password}).subscribe({
+      next: (response) => {
+        this.notificationService.success('Login successful! Welcome back.');
+        
+        // Extract user from response.data
+        const user = response?.data?.user;
+        const userRole = user?.role || 'USER';
+
+        if (this.returnUrl !== '/') {
+          this.router.navigateByUrl(this.returnUrl);
+        } else {
+          const dashboardPath = userRole === 'ADMIN' ? '/admin/dashboard' : '/user/dashboard';
+          this.router.navigateByUrl(dashboardPath);
+        }
       },
-      error: error => {
-        this.errorMessage = error?.error?.message || 'Login failed. Please check your credentials.';
+      error: (err) => {
         this.loading = false;
+        this.errorMessage = err?.error?.message || 'Login failed. Please check your credentials.';
+        this.notificationService.error(this.errorMessage);
       }
     });
   }

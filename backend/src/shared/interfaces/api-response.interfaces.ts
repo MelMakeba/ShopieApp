@@ -3,6 +3,8 @@ export interface ApiResponse<T> {
   message: string;
   data?: T;
   error?: string;
+  meta?: Record<string, any>;
+  redirectUrl?: string;
   timestamp: string;
 }
 

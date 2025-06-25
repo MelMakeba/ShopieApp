@@ -94,17 +94,23 @@ export class ProductsService {
 
       const totalPages = Math.ceil(total / limit);
 
-      return this.apiResponse.paginate(
-        products,
-        { page, limit, total, totalPages },
-        'Products retrieved successfully',
-      );
+      // Return paginated data
+      return {
+        statusCode: 200,
+        message: 'Products retrieved successfully',
+        data: products,
+        timestamp: new Date().toISOString(),
+        meta: { pagination: { page, limit, total, totalPages } },
+      };
     } catch (error: unknown) {
-      return this.apiResponse.error(
-        'Failed to retrieve products',
-        500,
-        error instanceof Error ? error.message : String(error),
-      );
+      return {
+        message: 'Failed to retrieve products',
+        statusCode: 500,
+        timestamp: new Date().toISOString(),
+        error: error instanceof Error ? error.message : String(error),
+        data: [] as Product[],
+        meta: { page: 1, limit: 10, total: 0, totalPages: 0 },
+      };
     }
   }
 
@@ -220,12 +226,11 @@ export class ProductsService {
       }
 
       await this.prisma.product.delete({ where: { id } });
-
       return this.apiResponse.ok(
-        null,
+        {},
         'Product deleted successfully',
         '', // redirectUrl
-        null, // data
+        {}, // data - using empty object instead of null
       );
     } catch (error: unknown) {
       return this.apiResponse.error(

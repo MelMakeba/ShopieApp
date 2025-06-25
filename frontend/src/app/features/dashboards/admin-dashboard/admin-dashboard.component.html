@@ -1,1 +1,66 @@
-<p>admin-dashboard works!</p>
+<div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
+    
+    @if (loading) {
+      <div class="flex justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    } @else if (error) {
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <p>Failed to load dashboard data. Please try again.</p>
+        <button (click)="loadStats()" class="mt-2 text-primary hover:underline">Retry</button>
+      </div>
+    } @else {
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Products -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-3 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-gray-500 text-sm">Total Products</p>
+              <h3 class="text-2xl font-bold">{{ stats.totalProducts }}</h3>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Low Stock -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
+          <div class="flex items-center">
+            <div class="bg-orange-100 p-3 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-gray-500 text-sm">Low Stock Items</p>
+              <h3 class="text-2xl font-bold">{{ stats.lowStock }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <a routerLink="/admin/products/create" class="bg-primary text-white p-4 rounded-lg flex items-center justify-center hover:bg-primary/90">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Add New Product
+          </a>
+          <a routerLink="/admin/products" class="bg-blue-500 text-white p-4 rounded-lg flex items-center justify-center hover:bg-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Manage Products
+          </a>
+        </div>
+      </div>
+    }
+  </div>

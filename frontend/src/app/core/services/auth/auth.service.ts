@@ -45,13 +45,15 @@ export class AuthService {
       );
   }
 
-  login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, { email, password })
-      .pipe(
-        tap(response => {
-          this.storeUserData(response);
-        })
-      );
+  login(credentials: any) {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+      tap(response => {
+        const data = response.data;
+        if (data?.token && data?.user) {
+          this.storeUserData(data);
+        }
+      })
+    );
   }
 
   logout(): void {
@@ -59,6 +61,13 @@ export class AuthService {
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+  }
+
+  redirectToLogin(): void {
+    const returnUrl = window.location.pathname;
+    this.router.navigate(['/login'], { 
+      queryParams: { returnUrl }
+    });
   }
 
   requestPasswordReset(email: string): Observable<any> {
@@ -82,5 +91,14 @@ export class AuthService {
     localStorage.setItem('token', response.token);
     localStorage.setItem('user', JSON.stringify(response.user));
     this.currentUserSubject.next(response.user);
+  }
+
+  updateCurrentUser(user: User): void {
+    localStorage.setItem('user', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
   }
 }

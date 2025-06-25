@@ -1,0 +1,181 @@
+<div class="container mx-auto py-8">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold">Manage Products</h1>
+      <a routerLink="/admin/products/create" class="bg-primary text-white px-4 py-2 rounded-lg flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        Add New Product
+      </a>
+    </div>
+    
+    <!-- Search Bar -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+      <div class="flex">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (keyup)="search()"
+          placeholder="Search products..."
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+        />
+        <button (click)="search()" class="ml-2 bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  
+    @if (loading) {
+      <div class="flex justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    } @else if (error) {
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <p>Failed to load products. Please try again.</p>
+        <button (click)="loadProducts()" class="mt-2 text-primary hover:underline">Retry</button>
+      </div>
+    } @else if (filteredProducts.length === 0) {
+      <div class="bg-white rounded-lg shadow-md p-8 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+        </svg>
+        <h3 class="text-lg font-medium text-gray-900 mt-4">No products found</h3>
+        <p class="text-gray-500 mt-2">
+          @if (searchQuery) {
+            No products match your search criteria. Try different keywords.
+            <button (click)="searchQuery = ''; search()" class="text-primary hover:underline ml-2">
+              Clear Search
+            </button>
+          } @else {
+            There are no products available. Add your first product to get started.
+          }
+        </p>
+      </div>
+    } @else {
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Product
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Price
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Stock
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Added On
+              </th>
+              <th scope="col" class="relative px-6 py-3">
+                <span class="sr-only">Actions</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            @for (product of filteredProducts; track product.id) {
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="h-10 w-10 flex-shrink-0">
+                      <img [src]="product.image || 'assets/placeholder.jpg'" [alt]="product.name" class="h-10 w-10 object-cover rounded">
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
+                      <div class="text-sm text-gray-500 truncate w-64">{{ product.description }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">${{ product.price.toFixed(2) }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span [class]="product.stock > 5 ? 'text-green-600' : 'text-red-600'">
+                    {{ product.stock }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ product.createdAt ? (product.createdAt | date:'mediumDate') : 'N/A' }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex space-x-2 justify-end">
+                    <a [routerLink]="['/admin/products/edit', product.id]" class="text-blue-600 hover:text-blue-900">
+                      Edit
+                    </a>
+                    <button (click)="deleteProduct(product.id)" class="text-red-600 hover:text-red-900">
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  
+    <div *ngIf="selectedProduct" class="update-form mt-8">
+      <h3 class="text-2xl font-semibold mb-4">Update Product</h3>
+      <form (ngSubmit)="updateProduct()" class="bg-white rounded-lg shadow-md p-6">
+        <div class="grid grid-cols-1 gap-4">
+          <label class="block">
+            <span class="text-gray-700">Name</span>
+            <input
+              type="text"
+              [(ngModel)]="selectedProduct.name"
+              name="name"
+              required
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+          </label>
+          <label class="block">
+            <span class="text-gray-700">Description</span>
+            <textarea
+              [(ngModel)]="selectedProduct.description"
+              name="description"
+              required
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            ></textarea>
+          </label>
+          <label class="block">
+            <span class="text-gray-700">Price</span>
+            <input
+              type="number"
+              [(ngModel)]="selectedProduct.price"
+              name="price"
+              required
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+          </label>
+          <label class="block">
+            <span class="text-gray-700">Stock</span>
+            <input
+              type="number"
+              [(ngModel)]="selectedProduct.stock"
+              name="stock"
+              required
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+          </label>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button
+            type="submit"
+            class="bg-primary text-white px-4 py-2 rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+          >
+            Update
+          </button>
+          <button
+            type="button"
+            (click)="selectedProduct = null"
+            class="ml-2 bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>

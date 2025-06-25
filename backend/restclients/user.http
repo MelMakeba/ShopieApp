@@ -1,6 +1,5 @@
 @baseurl= http://localhost:3000
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwic3ViIjoiMTFiMWZmN2YtMGVjMS00ZGFjLTlhOWMtYjJmZDA2OWRlMzdhIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTAzMjUyOTIsImV4cCI6MTc1MDMyODg5Mn0.-ukeqJX3-NGXmVPqXie-k6rwUDtRdzpZSr4PtIeVJC0
-
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Ikdlb3JnZUBnbWFpbC5jb20iLCJzdWIiOiJjbWNhazZkZ2owMDAxZzVhOGxlcmFxOG1uIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTA3NzE5ODksImV4cCI6MTc1MDc3NTU4OX0.Q1bVtNg1fuilF8FRJWr9Abm-gGClB3xAH12OqBamYsE
 
 ###Get user profile
 GET {{baseurl}}/users/get-profile

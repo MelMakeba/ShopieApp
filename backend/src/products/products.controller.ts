@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Controller,
   Get,
@@ -27,7 +28,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   // Admin only - Create product with image upload
-  @Post()
+  @Post('create')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles('ADMIN')
   @UseInterceptors(FileInterceptor('image', multerOptionsForMemory))
@@ -50,7 +51,7 @@ export class ProductsController {
   }
 
   // Public - Get all products (with optional search)
-  @Get()
+  @Get('all')
   findAll(@Query() searchProductsDto: SearchProductsDto) {
     return this.productsService.findAll(searchProductsDto);
   }
@@ -72,20 +73,33 @@ export class ProductsController {
   }
 
   // Admin only - Update product with image upload
-  @Put(':id')
+  @Put('update/:id')
+  @UseInterceptors(FileInterceptor('image', multerOptionsForMemory))
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles('ADMIN')
-  @UseInterceptors(FileInterceptor('image', multerOptionsForMemory))
-  update(
+  async updateProduct(
     @Param('id') id: string,
-    @Body() updateProductDto: UpdateProductDto,
+    @Body() body: UpdateProductDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
+    console.log('UpdateProduct method called'); // Debugging entry point
+    console.log('Received Payload', body);
+    const updateProductDto: UpdateProductDto = {
+      ...body,
+      price:
+        typeof body.price === 'string' ? parseFloat(body.price) : body.price,
+      stock:
+        typeof body.stock === 'string'
+          ? parseInt(body.stock as any, 10)
+          : body.stock,
+    };
+
+    console.log('Parsed Update DTO', updateProductDto);
     return this.productsService.update(id, updateProductDto, file);
   }
 
   // Admin only - Delete product
-  @Delete(':id')
+  @Delete('delete/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles('ADMIN')
   remove(@Param('id') id: string) {

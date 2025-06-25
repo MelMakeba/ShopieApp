@@ -5,9 +5,9 @@ POST {{baseurl}}/auth/register
 Content-Type: application/json
 
 {
-  "email": "mellisawanja254@gmail.com",
-  "password": "mellisa123",
-  "name": "Mellisa Waits"
+  "email": "mel@gmail.com",
+  "password": "mel006",
+  "name": "Earl Kadima"
 }
 
 ### Login
@@ -15,8 +15,8 @@ POST {{baseurl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "mellisawanja254@gmail.com",
-  "password": "mellisa123"
+  "email": "George@gmail.com",
+  "password": "0987654321"
   
 }
 
@@ -42,8 +42,8 @@ POST {{baseurl}}/auth/admin/create
 Content-Type: application/json
 
 {
-  "email": "melicity4@gmail.com",
-  "password": "melAdmin123",
+  "email": "mellisawanja254@gmail.com",
+  "password": "QWERTY123",
   "name": "Mel Admin"
 }
 

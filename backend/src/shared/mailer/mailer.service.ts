@@ -24,6 +24,7 @@ export interface PasswordResetContext {
   name: string;
   token: string;
   expiresIn: string;
+  resetUrl?: string;
 }
 
 export interface OrderConfirmationContext {
